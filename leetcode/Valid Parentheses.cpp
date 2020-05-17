@@ -29,16 +29,67 @@
 
 // 括号匹配
 
-#include<string>
-#include<stack>
+#include <string>
+#include <stack>
 using namespace std;
 
-class Solution {
-public:
-    bool isValid(string s) {
-        stack a ;
-        for(int i = 0; i < s.length; i++) {
+class Solution
+{
+  public:
+    bool isValid(string s)
+    {
+        if (s.size() % 2 != 0)
+            return false;
+        stack<char> a;
+        for (int i = 0; i < s.size(); i++)
+        {
 
+            if (s[i] == '(' || s[i] == '[' || s[i] == '{')
+            {
+                a.push(s[i]);
+            }
+            else if (!a.empty()&&((s[i] == ')' && a.top() == '(') || (s[i] == ']' && a.top() == '[') || (s[i] == '}' && a.top() == '{')))
+            {
+                a.pop();
+            }
         }
+        if (!a.empty())
+            return false;
+        return true;
     }
 };
+
+#include <unordered_map>
+class Solution {
+public:
+
+    unordered_map<char, char> um = {
+            {'{', '}'},
+            {'(', ')'},
+            {'[', ']'}
+    };
+
+    bool isValid(string s) {
+        if (s.empty()) {
+            return true;
+        } else if (s.size() % 2) {
+            return false;
+        } else {
+            stack<char> ss;
+            for (int i = 0; i < s.size(); i ++) {
+                if (ss.empty()) {
+                    ss.push(s[i]);
+                } else {
+                    if (s[i] == um[ss.top()]) {
+                        ss.pop();
+                    } else {
+                        ss.push(s[i]);
+                    }
+                }
+            }
+            return ss.empty();
+        }        
+    }
+};
+
+// 使用了 map 来映射，逻辑处理比较简单，将非法的输入也压入栈中
