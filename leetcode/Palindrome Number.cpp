@@ -21,65 +21,42 @@
 // 回文数的处理，只是输入类型是 int
 #include <iostream>
 using namespace std;
-class Solution {
+class Solution
+{
 public:
-    bool isPalindrome(int x) {
+    bool isPalindrome(int x)
+    {
         int len = 1;
-        if ( x < 0) return false;
-        while(x /= 10) { len++; };
+        if (x < 0)
+            return false;
+        while (x /= 10)
+        {
+            len++;
+        };
         cout << len << endl;
-        for (int i = 1; i <= len/2; i++)
+        for (int i = 1; i <= len / 2; i++)
         {
             int front, end;
             int fIndex = i;
             int eIndex = len - i;
             int temp = x;
-            while (fIndex --) {
+            while (fIndex--)
+            {
                 end = temp % 10;
                 temp /= 10;
             }
             temp = x;
-            while(eIndex -- ) {
+            while (eIndex--)
+            {
                 front = temp % 10;
                 temp /= 10;
             }
-            if (front != end) {
+            if (front != end)
+            {
                 return false;
             }
         }
-        return true;    
+        return true;
     }
 };
 
-int main() {
-int len = 1;
-int x = 10;
-        if ( x < 0) return false;
-        while(x /= 10) { len++; };
-        cout << len << endl;
-        for (int i = 1; i <= len/2; i++)
-        {
-            int front, end;
-            int fIndex = i;
-            int eIndex = len - i;
-            int temp = x;
-            while (fIndex --) {
-                end = temp % 10;
-                temp /= 10;
-            }
-            temp = x;
-            while(eIndex -- ) {
-                front = temp % 10;
-                temp /= 10;
-            }
-            if (front != end) {
-                cout << "false" << endl;
-
-                return false;
-            }
-        }
-        bucout << "true" << endl;
-
-        return true;    
-    return 0;
-}
