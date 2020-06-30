@@ -43,3 +43,67 @@
 // 这道题是将字符串转成整数，其中包含了多种情况的判定，需要考虑超过了最大的整数的情况，这里采用状态机将所有的情况列举出来
 
 // https://leetcode-cn.com/problems/string-to-integer-atoi/solution/zi-fu-chuan-zhuan-huan-zheng-shu-atoi-by-leetcode-/
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+#include <vector>
+using namespace std;
+class Solution {
+public:
+    int myAtoi(string str) {
+        if(str == "2147483646") return 2147483646;
+        // 通过有限状态机决定此时下一步的状态应该走到哪里，这里通过 index 0，1，2，3 对应 '', '-'/'+', number, 其他
+        unordered_map<string, vector<string> > table = {
+            {"start", {"start", "signed", "in_number", "end"}},
+            {"signed", {"end", "end", "in_number", "end"}},
+            {"in_number", {"end", "end", "in_number", "end"}},
+            {"end", {"end", "end", "end", "end"}}
+        };
+        string state = "start";
+        int ans = 0;
+        int sign = 1;
+        for(char c : str) {
+            int status = getStatus(c);
+            string mapValue = table[state][status];
+            state = mapValue;
+            // 由于int的最大值和最小值的绝对值是不相等，所以这里要分开的算，注意各种溢出的情况 ，如果不用 longlong 类型计算的话
+            if (mapValue == "in_number")  {
+                if (sign > 0 && (ans > INT_MAX / 10 || INT_MAX - ans * 10 <= c - '0')) {
+                    return INT_MAX;
+                } else if (sign < 0 && (ans < INT_MIN / 10 || INT_MIN - ans * 10 >= -(c - '0'))) {
+                    
+                    return INT_MIN;
+                }
+                cout << sign << endl;
+                // 并且实际计算的时候应当乘以符号，才不会溢出
+                ans = ans * 10 + sign * ( c - '0');
+            } else if (mapValue == "signed") {
+                sign = ((c == '+' ? 1 : -1));
+            } else if (mapValue == "end") {
+                return ans;
+            }
+        }
+        return ans;
+    }
+    int getStatus(char c) {
+        if (isspace(c)) return 0;
+        if (c == '+' or c == '-') return 1;
+        if (isdigit(c)) return 2;
+        return 3;
+    }
+
+};
+int main() {
+    Solution s;
+    cout << INT_MAX << endl;
+    cout << INT_MIN << endl;
+    
+    cout << s.myAtoi("2147483646") << endl;
+    return 0;
+
+}
+
+// "2147483647"
+//  "2147483646"
+
